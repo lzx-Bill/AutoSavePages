@@ -51,7 +51,7 @@
 下载依赖:
 
 ```
-pip install flask flask_mysqldb flask_cors tldextract
+pip install flask flask_mysqldb flask_cors 
 ```
 
 修改数据库配置：
@@ -73,10 +73,15 @@ app.config['MYSQL_DB'] = 'mysql'
 数据库建表（简单版）：
 
 ```sql
-CREATE TABLE visited_urls (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    url VARCHAR(2048) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-) CHARSET=utf8mb4;
+create table visited_urls
+(
+    id               int auto_increment
+        primary key,
+    url              varchar(2048)                       not null,
+    visit_time       timestamp default CURRENT_TIMESTAMP null,
+    title            varchar(2048)                       null,
+    top_level_domain varchar(255)                        not null
+)
+    collate = utf8mb4_unicode_ci;
 ```
 
