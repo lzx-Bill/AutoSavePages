@@ -12,10 +12,21 @@
 
 预计添加功能
 
-- [ ] 针对保存的URL进行过滤筛选，转换成EPUB文件
-- [ ] 对转换的EPUB进行归档整理
-- [ ] 一个简单的管理页面对转换的EPUB文件展示
-- [ ] ... ...
+- [ ] ~~针对保存的URL进行过滤筛选，转换成EPUB文件~~
+
+  > EPUB貌似保存下来的内容不太友好。。。
+  >
+  > PDF在使用wkhtmltopdf的时候被卡住了，进度一直在50%。。。
+  >
+  > MHTML 需要权限。。。
+  >
+  > 直接保存URL，再加一个标题一起保存到DB当中吧
+
+- [ ] ~~对转换的EPUB进行归档整理~~
+
+- [ ] ~~一个简单的管理页面对转换的EPUB文件展示~~
+
+- [ ] 对保存的URL进行网站分类
 
 
 
@@ -65,7 +76,7 @@ app.config['MYSQL_DB'] = 'mysql'
 CREATE TABLE visited_urls (
     id INT AUTO_INCREMENT PRIMARY KEY,
     url VARCHAR(2048) NOT NULL,
-    visit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    title VARCHAR(255) NOT NULL,
+) CHARSET=utf8mb4;
 ```
 
