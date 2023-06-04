@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_mysqldb import MySQL
 from flask_cors import CORS
+from urllib.parse import urlsplit
 
 app = Flask(__name__)
 
@@ -21,6 +22,9 @@ mysql = MySQL(app)
 def save_url():
     url = request.form.get('url')
 
+    if not url or not is_valid_url(url):
+        return 'Bad request: invalid or missing url parameter', 400
+
     title = get_title(url)
 
     # 储存 URL 到数据库
@@ -31,6 +35,15 @@ def save_url():
 @app.route('/get_url', methods=['GET'])
 def get_url():
     return 'Success'
+
+
+def is_valid_url(url):
+    try:
+        result = urlsplit(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
+
 
 def get_title(url):
     response = requests.get(url)
