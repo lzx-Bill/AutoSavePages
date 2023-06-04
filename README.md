@@ -51,7 +51,7 @@
 下载依赖:
 
 ```
-pip install flask flask_mysqldb flask_cors
+pip install flask flask_mysqldb flask_cors tldextract
 ```
 
 修改数据库配置：

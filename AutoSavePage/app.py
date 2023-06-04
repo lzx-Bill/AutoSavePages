@@ -3,6 +3,8 @@ from flask_mysqldb import MySQL
 from flask_cors import CORS
 from urllib.parse import urlsplit
 
+import tldextract
+
 app = Flask(__name__)
 
 CORS(app)
@@ -25,16 +27,24 @@ def save_url():
     if not url or not is_valid_url(url):
         return 'Bad request: invalid or missing url parameter', 400
 
+    tld = get_top_level_domain(url)
+
     title = get_title(url)
 
     # 储存 URL 到数据库
-    store_url_to_database(url, title)
+    store_url_to_database(url, title, tld)
 
     return 'Success', 200
 
 @app.route('/get_url', methods=['GET'])
 def get_url():
     return 'Success'
+
+
+def get_top_level_domain(url):
+    extracted = tldextract.extract(url)
+    return f"{extracted.domain}.{extracted.suffix}"
+
 
 
 def is_valid_url(url):
@@ -59,14 +69,14 @@ def get_title(url):
 
     return title
 
-def store_url_to_database(url, title):
+def store_url_to_database(url, title, tld):
     # 在这里添加保存 URL 至您数据库的代码，例如 MySQL、Postgres SQL、MongoDB 等，根据您的实际需求来实现。
     # 连接到 MySQL 数据库
     cursor = mysql.connection.cursor()
 
     # 在这里编写 SQL 语句，将 URL 插入到您的数据表中
     # 假设您的数据库中有一个名为 "visited_urls" 的表，其中包含两个字段：id 和 url
-    sql_query = f"INSERT INTO visited_urls (url,title) VALUES ('{url}','{title}')"
+    sql_query = f"INSERT INTO visited_urls (url,title, top_level_domain) VALUES ('{url}','{title}','{tld}')"
 
     # 执行 SQL 语句
     cursor.execute(sql_query)
