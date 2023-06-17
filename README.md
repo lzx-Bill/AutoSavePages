@@ -7,6 +7,8 @@
 
 - [ ] 浏览器（Google）打开新页面自动抓取url并发送给后台
 - [ ] 后台对接收的URL进行保存
+  - [ ] 使用远程服务器接受URL
+
 
 
 
@@ -83,5 +85,66 @@ create table visited_urls
     top_level_domain varchar(255)                        not null
 )
     collate = utf8mb4_unicode_ci;
+```
+
+
+
+### 服务器配置
+
+首先需要python 环境（最好python 3） ，同时安装pip
+
+然后install相关的module
+
+```
+pip install flask mysql-connector-python Flask-MySQL flask_mysqldb flask_cors bs4 requests tldextract
+```
+
+在安装flask_mysqldb的过程中遇到坑，要去下载python连接MySQL的驱动才行。。。
+
+然后在服务器上（CentOS）的一下目录创建一个新的service,例如： auto_save.service
+
+```
+/etc/systemd/syetem/
+```
+
+编辑auto_save.service里面的内容：
+
+```
+[Unit]
+Description=Auto Save URL script
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /root/tools/auto_save_page/app.py
+
+[Install]
+WantedBy=multi-user.target
+```
+
+/usr/bin/python3 表示python3 的位置，使用which python3 命令可以看到
+
+/root/tools/auto_save_page/app.py  脚本位置
+
+
+
+然后：
+
+```
+systemctl daemon-reload
+systemctl enable auto_save.service
+systemctl start auto_save.service
+# 查看状态
+systemctl status auto_save.service
+```
+
+
+
+另外打开防火墙：
+
+```
+firewall-cmd --permanent --zone=public --add-port=5000/tcp
+firewall-cmd --reload
+firewall-cmd --list-all
 ```
 

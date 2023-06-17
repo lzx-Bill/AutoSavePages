@@ -1,16 +1,18 @@
+import requests
+from bs4 import BeautifulSoup
 from flask import Flask, request
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from urllib.parse import urlsplit
 
-import tldextract
+from tldextract import tldextract
 
 app = Flask(__name__)
 
 CORS(app)
 
 # MySQL 配置
-app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_HOST'] = '120.0.0.1'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'mysql'
@@ -36,6 +38,7 @@ def save_url():
 
     return 'Success', 200
 
+
 @app.route('/get_url', methods=['GET'])
 def get_url():
     return 'Success'
@@ -44,7 +47,6 @@ def get_url():
 def get_top_level_domain(url):
     extracted = tldextract.extract(url)
     return f"{extracted.domain}.{extracted.suffix}"
-
 
 
 def is_valid_url(url):
@@ -68,6 +70,7 @@ def get_title(url):
         title = "No Title Found"
 
     return title
+
 
 def store_url_to_database(url, title, tld):
     # 在这里添加保存 URL 至您数据库的代码，例如 MySQL、Postgres SQL、MongoDB 等，根据您的实际需求来实现。
